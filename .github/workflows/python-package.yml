@@ -30,7 +30,7 @@ jobs:
         python -m pip install pylint pytest pandas
     - name: Lint with pylint
       run: |
-        pylint
+        pylint --max-line-length=240
     - name: Test with pytest
       run: |
         pytest
