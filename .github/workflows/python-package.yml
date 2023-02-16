@@ -30,7 +30,7 @@ jobs:
         python -m pip install pylint pytest pandas
     - name: Lint with pylint
       run: |
-        pylint  
+        pylint --suggestion-mode y
     - name: Test with pytest
       run: |
         pytest
