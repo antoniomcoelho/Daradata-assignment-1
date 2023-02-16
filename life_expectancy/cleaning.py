@@ -1,6 +1,6 @@
 ''' Clean data code'''
 import argparse
-from pathlib import Path                                                        # pylint: disable=import-error
+from pathlib import Path # pylint: disable=import-error
 import pandas as pd
 
 
@@ -23,7 +23,7 @@ def clean_data(region_user):
 
             # Append necessary information (unit, sex, age and region, year)
             data = append_information(data_prov, data, flag_value_is_not_float,
-                                      region_user, csv_table, value, j)         # pylint: disable=line-too-long
+                                      region_user, csv_table, value, j)
 
 
     # Create dataframe and rename columns
@@ -56,12 +56,14 @@ def convert_value_to_float(csv_table, j, i):
 
     return value, flag
 
-def append_information(data_prov, data, flag_value_is_not_float, region_user,   # pylint: disable=too-many-arguments
-                       csv_table, value, j):                                    # pylint: disable=too-many-arguments
+def append_information(data_prov, data, # pylint: disable=too-many-arguments
+                       flag_value_is_not_float, region_user,
+                       csv_table, value, j): # pylint: disable=too-many-arguments
     ''' Append necessary information (unit, sex, age and region, year) to data vector '''
     if flag_value_is_not_float == 0:
-        if data_prov[3] == region_user:  # Select regions that equal to region  # pylint: disable=line-too-long
-                                            # defined by the user (region_user) # pylint: disable=line-too-long
+        # Select regions that equal to region
+        # defined by the user (region_user)
+        if data_prov[3] == region_user:
             # Append year to data_prov (= [unit, sex, age and region, year])
             data_prov.append(int(csv_table.columns[j]))
             # Append value of that year (= [unit, sex, age, region, year, value])
