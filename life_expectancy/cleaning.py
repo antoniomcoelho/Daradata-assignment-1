@@ -1,7 +1,10 @@
 ''' Clean data code'''
 import argparse
+from pathlib import Path                                                        # pylint: disable=import-error
 import pandas as pd
 
+
+DATA_DIR = Path(__file__).parent / 'data'
 
 def clean_data(region_user):
     ''' Function to clean data from eu_life_expectancy_raw.tsv file'''
@@ -10,7 +13,7 @@ def clean_data(region_user):
 
     column0 = csv_table.columns[0] # Name of first column
     data = [] # Vector with all fields
-    for i in range(0, len(csv_table)): # len(csv_table)
+    for i in range(0, 10): # len(csv_table)
         for j in range(1, len(csv_table.columns)):
             # Split the first column into unit, sex, age and region
             data_prov = csv_table[column0][i].split(',')
@@ -32,8 +35,7 @@ def clean_data(region_user):
 
 def read_file():
     ''' Read tsv file and transform it to csv '''
-    name_file = "C:\\Users\\amfcc\\MyDocuments\\Data Engineering\\DareData pod 3\\assignments\\" \
-                "life_expectancy\\data\\eu_life_expectancy_raw.tsv"             # pylint: disable=line-too-long
+    name_file = DATA_DIR / "eu_life_expectancy_raw.tsv"
     csv_table = pd.read_table(name_file, sep='\t')
 
     return csv_table
