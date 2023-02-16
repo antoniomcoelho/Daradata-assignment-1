@@ -43,7 +43,7 @@ def read_file():
 def convert_value_to_float(csv_table, j, i):
     ''' Convert value to float '''
     value = 0
-    flag = 0  # Indicate if the value is not a value convertible to float (ex. ":")
+    flag = 0  # Indicate if the value is not a value convertible to float (ex. ":") 
 
     # If the value starts with a number (ex. "42.1")
     if str(csv_table[csv_table.columns[j]][i])[0].isdigit():
