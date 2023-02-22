@@ -7,12 +7,16 @@ import pandas as pd
 DATA_DIR = Path(__file__).parent / 'data'
 
 
+def load_data():
+    ''' Read tsv file and transform it to csv '''
+    name_file = DATA_DIR / "eu_life_expectancy_raw.tsv"
+    csv_table = pd.read_table(name_file, sep='\t')
+
+    return csv_table
 
 
-
-def clean_data(region_user):
+def clean_data(csv_table, region_user):
     ''' Function to clean data from eu_life_expectancy_raw.tsv file'''
-    csv_table = read_data()
 
     first_column = csv_table.columns[0]
     df_life = []
@@ -29,21 +33,13 @@ def clean_data(region_user):
             df_life = append_information(df_first_column, df_life, flag_value_is_not_float,
                                          region_user, csv_table, value, j)
 
-    # Create dataframe and rename columns
+    # Rename columns and create dataframe
     columns_name = {0: 'unit', 1: 'sex', 2: 'age', 3: 'region', 4: 'year', 5: 'value'}
     df_life = pd.DataFrame(df_life).rename(columns=columns_name)
 
-    # Save data
-    df_life.to_csv('pt_life_expectancy.csv', index=False)
-
     return df_life
 
-def read_data():
-    ''' Read tsv file and transform it to csv '''
-    name_file = DATA_DIR / "eu_life_expectancy_raw.tsv"
-    csv_table = pd.read_table(name_file, sep='\t')
 
-    return csv_table
 
 
 def convert_value_to_float(csv_table, j, i):
@@ -65,9 +61,9 @@ def convert_value_to_float(csv_table, j, i):
     return value, flag_value_is_not_convertible
 
 
-def append_information(df_prov, df_life, # pylint: disable=too-many-arguments
-                       flag_value_is_not_float, region_user,
-                       csv_table, value, j): # pylint: disable=too-many-arguments
+def append_information(df_prov, df_life, region_user,  # pylint: disable=too-many-arguments
+                       flag_value_is_not_float,
+                       csv_table, value, j):  # pylint: disable=too-many-arguments
     ''' Append necessary information (unit, sex, age and region, year) to data vector '''
     region_column = 3
     if flag_value_is_not_float == 0:
@@ -83,6 +79,10 @@ def append_information(df_prov, df_life, # pylint: disable=too-many-arguments
 
     return df_life
 
+def save_data(df_life):
+    ''' Save data as csv'''
+    df_life.to_csv('pt_life_expectancy.csv', index=False)
+
 
 def add_region_user():
     ''' Function to create a command-line option to select the region'''
@@ -96,4 +96,8 @@ def add_region_user():
 if __name__ == '__main__': # pragma: no cover
     REGION_USER = add_region_user()
 
-    clean_data(REGION_USER)
+    CSV_TABLE = load_data()
+
+    DF_FINAL = clean_data(CSV_TABLE, REGION_USER)
+
+    save_data(DF_FINAL)
