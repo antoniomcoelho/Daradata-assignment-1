@@ -1,7 +1,7 @@
 """Tests for the cleaning module"""
 import pandas as pd
 
-from life_expectancy.cleaning import clean_data
+from life_expectancy.cleaning import clean_data, load_data, save_data, main
 from . import OUTPUT_DIR
 
 
