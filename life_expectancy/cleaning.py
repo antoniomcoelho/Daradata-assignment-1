@@ -21,7 +21,7 @@ def clean_data(csv_table, region_user):
     first_column = csv_table.columns[0]
     df_life = []
 
-    for i in range(0, 10):  # len(csv_table)
+    for i in range(0, len(csv_table)):
         for j in range(1, len(csv_table.columns)):
             # Split the first column into unit, sex, age and region
             df_first_column = csv_table[first_column][i].split(',')
