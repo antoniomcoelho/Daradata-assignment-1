@@ -75,6 +75,6 @@ def main(region_user):
 
 
 if __name__ == '__main__': # pragma: no cover
-    #REGION_USER = add_region_user()
-    REGION_USER = "PT"
+    REGION_USER = add_region_user()
+
     main(REGION_USER)
