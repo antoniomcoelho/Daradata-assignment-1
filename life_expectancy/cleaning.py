@@ -17,14 +17,14 @@ def add_region_user():
     return args.region
 
 
-def load_data():
+def load_data() -> pd.DataFrame:
     ''' Load data '''
     name_file = DATA_DIR / "eu_life_expectancy_raw.tsv"
     csv_table = pd.read_table(name_file, sep='\t')
     return csv_table
 
 
-def clean_data(csv_table, region_user):
+def clean_data(csv_table: pd.DataFrame, region_user: str) -> pd.DataFrame:
     ''' Function to clean data from eu_life_expectancy_raw.tsv file'''
 
     first_column = csv_table.columns[0]
@@ -62,12 +62,12 @@ def clean_data(csv_table, region_user):
     return filtered_df
 
 
-def save_data(df_final):
+def save_data(df_final: pd.DataFrame) -> None:
     ''' Save data as csv'''
     df_final.to_csv('pt_life_expectancy.csv', index=False)
 
 
-def main(region_user):
+def main(region_user: str = "PT") -> None:
     ''' Load, clean and save data'''
     csv_table = load_data()
     df_final = clean_data(csv_table, region_user)
@@ -75,6 +75,6 @@ def main(region_user):
 
 
 if __name__ == '__main__': # pragma: no cover
-    REGION_USER = add_region_user()
-
+    #REGION_USER = add_region_user()
+    REGION_USER = "PT"
     main(REGION_USER)
