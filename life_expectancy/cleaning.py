@@ -7,82 +7,6 @@ import pandas as pd
 DATA_DIR = Path(__file__).parent / 'data'
 
 
-def load_data():
-    ''' Read tsv file and transform it to csv '''
-    name_file = DATA_DIR / "eu_life_expectancy_raw.tsv"
-    csv_table = pd.read_table(name_file, sep='\t')
-
-    return csv_table
-
-
-def clean_data(csv_table, region_user):
-    ''' Function to clean data from eu_life_expectancy_raw.tsv file'''
-
-    first_column = csv_table.columns[0]
-    df_life = []
-
-    for i in range(0, len(csv_table)):
-        for j in range(1, len(csv_table.columns)):
-            # Split the first column into unit, sex, age and region
-            df_first_column = csv_table[first_column][i].split(',')
-
-            # Convert value to float
-            value, flag_value_is_not_float = convert_value_to_float(csv_table, j, i)
-
-            # Append necessary information (unit, sex, age and region, year)
-            df_life = append_information(df_first_column, df_life, flag_value_is_not_float,
-                                         region_user, csv_table, value, j)
-
-    # Rename columns and create dataframe
-    columns_name = {0: 'unit', 1: 'sex', 2: 'age', 3: 'region', 4: 'year', 5: 'value'}
-    df_life = pd.DataFrame(df_life).rename(columns=columns_name)
-
-    return df_life
-
-
-
-
-def convert_value_to_float(csv_table, j, i):
-    ''' Convert value to float '''
-    value = 0
-
-    # 0 - it is convertible, 1 - it is not convertible
-    flag_value_is_not_convertible = 0
-
-    # If the value starts with a number (ex. "42.1"),
-    # otherwise it is a word and not convertible to float
-    if str(csv_table[csv_table.columns[j]][i])[0].isdigit():
-        # Split the value when it has a number and a letter (ex. "42.1 e")
-        value = str(csv_table[csv_table.columns[j]][i]).split(" ", maxsplit=1)[0]
-        value = float(value)
-    else:
-        flag_value_is_not_convertible = 1  # The value is not convertible to float (ex. ":")
-
-    return value, flag_value_is_not_convertible
-
-
-def append_information(df_prov, df_life, region_user,  # pylint: disable=too-many-arguments
-                       flag_value_is_not_float,
-                       csv_table, value, j):  # pylint: disable=too-many-arguments
-    ''' Append necessary information (unit, sex, age and region, year) to data vector '''
-    region_column = 3
-    if flag_value_is_not_float == 0:
-        # Filters selected regions
-        if df_prov[region_column] == region_user:
-
-            # Append "year" (= [unit, sex, age and region, year])
-            df_prov.append(int(csv_table.columns[j]))
-
-            # Append "value" of that "year" (= [unit, sex, age, region, year, value])
-            df_prov.append(value)
-            df_life.append(df_prov)
-
-    return df_life
-
-def save_data(df_life):
-    ''' Save data as csv'''
-    df_life.to_csv('pt_life_expectancy.csv', index=False)
-
 
 def add_region_user():
     ''' Function to create a command-line option to select the region'''
@@ -93,11 +17,64 @@ def add_region_user():
     return args.region
 
 
+def load_data():
+    ''' Load data '''
+    name_file = DATA_DIR / "eu_life_expectancy_raw.tsv"
+    csv_table = pd.read_table(name_file, sep='\t')
+    return csv_table
+
+
+def clean_data(csv_table, region_user):
+    ''' Function to clean data from eu_life_expectancy_raw.tsv file'''
+
+    first_column = csv_table.columns[0]
+    other_cols = csv_table.columns[1:]
+    first_column_split = ['unit', 'sex', 'age', 'region']
+
+    # Split the values of the first column into 'unit', 'sex', 'age', 'region'
+    csv_table[first_column_split] = csv_table[first_column].str.split(',', expand=True)
+
+    # Expand the "value" according to "year"
+    selected_columns = list(first_column_split) + list(other_cols)
+    df_first_column = csv_table[selected_columns]
+    df_first_column = df_first_column.melt(id_vars=first_column_split,
+                                           var_name="year", value_name="value")
+
+    # Filter per region
+    filtered_df = df_first_column[df_first_column['region'] == region_user]
+
+    # Ensure "value" is a float
+    # First, it identifies which number is really a number
+    # or if is other type (ex: ":")
+    filtered_df = filtered_df[[filtered_df['value'].iloc[i][0].isdigit()
+                               for i in range(0, len(filtered_df))]]
+
+    # Second, when there is a number and a letter (ex. "42.1 e"),
+    # it selects only the numbers
+    filtered_df['value'] = [filtered_df['value'].iloc[i].split(" ", maxsplit=1)[0]
+                            for i in range(0, len(filtered_df))]
+
+    filtered_df['value'] = filtered_df['value'].astype(float)
+
+    # Ensure "year" is an integral
+    filtered_df['year'] = filtered_df['year'].astype(int)
+
+    return filtered_df
+
+
+def save_data(df_final):
+    ''' Save data as csv'''
+    df_final.to_csv('pt_life_expectancy.csv', index=False)
+
+
+def main(region_user):
+    ''' Load, clean and save data'''
+    csv_table = load_data()
+    df_final = clean_data(csv_table, region_user)
+    save_data(df_final)
+
+
 if __name__ == '__main__': # pragma: no cover
-    REGION_USER = add_region_user()
-
-    CSV_TABLE = load_data()
-
-    DF_FINAL = clean_data(CSV_TABLE, REGION_USER)
-
-    save_data(DF_FINAL)
+    #REGION_USER = add_region_user()
+    REGION_USER = "PT"
+    main(REGION_USER)
