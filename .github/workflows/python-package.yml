@@ -33,4 +33,4 @@ jobs:
         pylint --suggestion-mode y
     - name: Test with pytest
       run: |
-        pytest
+        pytest 
