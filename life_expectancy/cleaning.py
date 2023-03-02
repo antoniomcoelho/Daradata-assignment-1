@@ -40,27 +40,21 @@ def clean_data(csv_table: pd.DataFrame, region_user: str) -> pd.DataFrame:
     df_first_column = df_first_column.melt(id_vars=first_column_split,
                                            var_name="year", value_name="value")
 
-    # Filter per region
-    filtered_df = df_first_column[df_first_column['region'] == region_user]
+    filtered_df = df_first_column[df_first_column['region'].isin([region_user])].copy()
 
-    # Ensure "value" is a float
-    # First, it identifies which number is really a number
-    # or if is other type (ex: ":")
-    filtered_df = filtered_df[[filtered_df['value'].iloc[i][0].isdigit()
-                               for i in range(0, len(filtered_df))]]
+    filtered_df = convert_value_to_float(filtered_df)
 
-    # Second, when there is a number and a letter (ex. "42.1 e"),
-    # it selects only the numbers
-    filtered_df['value'] = [filtered_df['value'].iloc[i].split(" ", maxsplit=1)[0]
-                            for i in range(0, len(filtered_df))]
-
-    filtered_df['value'] = filtered_df['value'].astype(float)
-
-    # Ensure "year" is an integral
     filtered_df['year'] = filtered_df['year'].astype(int)
 
     return filtered_df
 
+def convert_value_to_float(filtered_df: pd.DataFrame) -> pd.DataFrame:
+    ''' Function to convert the column "values" to float '''
+    filtered_df['value'] = filtered_df['value'].str.replace(r'[^0-9.]+', '', regex=True)
+    filtered_df['value'] = pd.to_numeric(filtered_df['value'], errors='coerce')
+    filtered_df = filtered_df.dropna(subset=['value'])
+
+    return filtered_df
 
 def save_data(df_final: pd.DataFrame) -> None:
     ''' Save data as csv'''
@@ -76,5 +70,5 @@ def main(region_user: str = "PT") -> None:
 
 if __name__ == '__main__': # pragma: no cover
     #REGION_USER = add_region_user()
-    REGION_USER = "PT"
+    REGION_USER = 'PT'
     main(REGION_USER)
