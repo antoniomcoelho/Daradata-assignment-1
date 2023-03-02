@@ -3,9 +3,9 @@ name = "assignments"
 version = "0.0.1"
 readme = "README.md"
 requires-python = ">=3.8"
-description = "First assignment of the Foundations Learning Path"
+description = "Second assignment of the Foundations Learning Path"
 authors = [
-    {name = "Fernando Cordeiro<fernando@daredata.engineering>"}
+    {name = "António Coelho<amfccoe@gmail.com>"}
 ]
 dependencies = ["pandas"]
 
