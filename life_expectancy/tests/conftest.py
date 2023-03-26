@@ -19,7 +19,7 @@ def run_before_and_after_tests() -> None:
 
 @pytest.fixture(scope="session")
 def load_data_expected() -> pd.DataFrame:
-    """Fixture to load the expected output of the cleaning script"""
+    """Fixture to load the expected tsv file"""
     return pd.read_csv(FIXTURES_DIR / "eu_life_expectancy_raw.tsv", sep="\t")
 
 @pytest.fixture(scope="session")
