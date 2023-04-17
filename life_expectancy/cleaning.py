@@ -1,6 +1,5 @@
 ''' Clean data code'''
-import argparse
-from pathlib import Path # pylint: disable=import-error
+from pathlib import Path
 import pandas as pd
 import numpy as np
 
@@ -40,4 +39,3 @@ def convert_value_to_float(filtered_df: pd.DataFrame) -> pd.DataFrame:
     filtered_df = filtered_df.dropna(subset=['value'])
 
     return filtered_df
-
