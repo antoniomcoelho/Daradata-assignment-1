@@ -5,7 +5,7 @@ from life_expectancy.cleaning import clean_data
 
 
 
-def add_region_user():
+def _add_region_user() -> str:
     ''' Function to create a command-line option to select the region'''
     region_user_parser = argparse.ArgumentParser()
     region_user_parser.add_argument("region", help="select region", type=str)
