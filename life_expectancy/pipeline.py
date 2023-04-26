@@ -1,29 +1,43 @@
 ''' Pipeline for clean data code'''
-import argparse
-from life_expectancy.load_save import load_data, save_data
-from life_expectancy.cleaning import clean_data
+import sys
+
+from clean_files import *
 
 
 
-def _add_region_user() -> str:
+def add_region_user() -> str:
     ''' Function to create a command-line option to select the region'''
-    region_user_parser = argparse.ArgumentParser()
-    region_user_parser.add_argument("region", help="select region", type=str)
-    args = region_user_parser.parse_args()
+    try:
+        return_value = [sys.argv[2]]
+        for i in range(3, len(sys.argv)):
+            return_value.append(sys.argv[i])
+    except:
+        Country.list_countries()
+        return_value = ['PT']
 
-    return args.region
+    return return_value
+
+def add_file_type_user() -> str:
+    ''' Function to create a command-line option to select the region'''
+    try:
+        return_value = sys.argv[1]
+    except:
+        return_value = 'TSV'
+
+    return return_value
 
 
-def main(region_user: str = "PT") -> None:
+def main(region_user: list = ["PT"], file_type: str = "TSV") -> None:
     ''' Load, clean and save data'''
-    csv_table = load_data()
-    df_final = clean_data(csv_table, region_user)
-    save_data(df_final)
+    clean_df = cleanFile(region_user, file_type)
+
+    csv_table = clean_df.load_data()
+    df_final = clean_df.clean_data(csv_table, region_user)
+    clean_df.save_data(df_final, region_user)
 
 
 if __name__ == '__main__': # pragma: no cover
+    FILE_TYPE = add_file_type_user()
     REGION_USER = add_region_user()
 
-    main(REGION_USER)
-
-
+    main(REGION_USER, FILE_TYPE)
