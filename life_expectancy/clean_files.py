@@ -10,6 +10,7 @@ from enum import Enum, unique, Flag
 DATA_DIR = Path(__file__).parent / 'data'
 
 
+
 class Country(Enum):
     ''' List of possible countries '''
     Portugal = 'PT'
@@ -20,16 +21,18 @@ class Country(Enum):
         print('List of countries:')
         for country in Country:
             print("    ", country.name, ":", country.value)
-
+        countries = [country.value for country in Country]
+        return countries
 
 
 class dataFormatsStrategy(ABC):
+    """ Definition of strategy classes"""
     @abstractmethod
     def load_data(self):
         """ Loads data files """
 
     @abstractmethod
-    def clean_data(self, csv_table: pd.DataFrame, region_user: list = ['PT']) -> pd.DataFrame:
+    def clean_data(self, csv_table: pd.DataFrame, region_user: list[str] = ['PT']) -> pd.DataFrame:
         """ Clean data files """
 
 
@@ -40,7 +43,7 @@ class TSVstrategy(dataFormatsStrategy):
         csv_table = pd.read_table(name_file, sep='\t')
         return csv_table
 
-    def clean_data(self, csv_table: pd.DataFrame, region_user: list = ['PT']) -> pd.DataFrame:
+    def clean_data(self, csv_table: pd.DataFrame, region_user: list[str] = ['PT']) -> pd.DataFrame:
         ''' Function to clean data from eu_life_expectancy_raw.tsv file'''
         first_column = csv_table.columns[0]
         other_cols = csv_table.columns[1:]
@@ -80,8 +83,8 @@ class JSONstrategy(dataFormatsStrategy):
         csv_table = pd.read_json(name_file)
         return csv_table
 
-    def clean_data(self, csv_table: pd.DataFrame, region_user: list = ['PT']) -> pd.DataFrame:
-        ''' Function to clean data from eu_life_expectancy_raw.tsv file'''
+    def clean_data(self, csv_table: pd.DataFrame, region_user: list[str] = ['PT']) -> pd.DataFrame:
+        ''' Function to clean data '''
         selected_columns = ['unit', 'sex', 'age', 'country', 'year', 'life_expectancy']
 
         df_first_column = csv_table[selected_columns]
@@ -95,7 +98,7 @@ class JSONstrategy(dataFormatsStrategy):
 
 
 class cleanFile:
-    def __init__(self, region_user: list, file_type: str):
+    def __init__(self, region_user: list[str], file_type: str):
         self.region_user = region_user
         self.file_type = file_type
         self.strategies: Dict[str: dataFormatsStrategy] = {
@@ -105,17 +108,18 @@ class cleanFile:
         }
 
     def load_data(self) -> pd.DataFrame:
+        ''' Function to load the data '''
         csv_table = self.strategies[self.file_type].load_data()
         return csv_table
 
     def clean_data(self, csv_table: pd.DataFrame, region_user: str = 'PT') -> pd.DataFrame:
-        ''' Function to clean data from eu_life_expectancy_raw.tsv file'''
+        ''' Function to clean data '''
         filtered_df = self.strategies[self.file_type].clean_data(csv_table, region_user)
 
         return filtered_df
 
-    def save_data(self, df_final: pd.DataFrame, region_user: str) -> None:
-        ''' Save data as csv'''
+    def save_data(self, df_final: pd.DataFrame, region_user: list[str]) -> None:
+        ''' Save data as csv '''
         for i in range(0, len(df_final)):
             df_final[i].to_csv(DATA_DIR / f'{region_user[i].lower()}_life_expectancy.csv', index=False)
 

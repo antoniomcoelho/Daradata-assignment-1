@@ -18,7 +18,7 @@ def add_region_user() -> str:
     return return_value
 
 def add_file_type_user() -> str:
-    ''' Function to create a command-line option to select the region'''
+    ''' Function to create a command-line option to select the file type'''
     try:
         return_value = sys.argv[1]
     except:
@@ -27,7 +27,7 @@ def add_file_type_user() -> str:
     return return_value
 
 
-def main(region_user: list = ["PT"], file_type: str = "TSV") -> None:
+def main(region_user: list[str] = ["PT"], file_type: str = "TSV") -> None:
     ''' Load, clean and save data'''
     clean_df = cleanFile(region_user, file_type)
 
