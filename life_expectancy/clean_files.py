@@ -16,6 +16,7 @@ class Country(Enum):
     Portugal = 'PT'
     Belgium = 'BE'
     Denmark = 'DK'
+    Spain = 'SP'
 
     def list_countries(cls):
         print('List of countries:')

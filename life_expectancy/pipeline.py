@@ -13,7 +13,7 @@ def add_region_user() -> str:
             return_value.append(sys.argv[i])
     except:
         Country.list_countries(Country)
-        
+
         return_value = ['PT']
 
     return return_value
