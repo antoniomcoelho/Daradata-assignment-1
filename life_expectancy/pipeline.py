@@ -1,7 +1,7 @@
 ''' Pipeline for clean data code'''
 import sys
 
-from clean_files import *
+from clean_files import Country, CleanFile
 
 
 
@@ -12,7 +12,7 @@ def add_region_user() -> str:
         for i in range(3, len(sys.argv)):
             return_value.append(sys.argv[i])
     except:
-        Country.list_countries()
+        Country.list_countries(Country)
         return_value = ['PT']
 
     return return_value
@@ -29,7 +29,7 @@ def add_file_type_user() -> str:
 
 def main(region_user: list[str] = ["PT"], file_type: str = "TSV") -> None:
     ''' Load, clean and save data'''
-    clean_df = cleanFile(region_user, file_type)
+    clean_df = CleanFile(region_user, file_type)
 
     csv_table = clean_df.load_data()
     df_final = clean_df.clean_data(csv_table, region_user)

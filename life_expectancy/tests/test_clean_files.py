@@ -1,10 +1,10 @@
 """Tests for the cleaning module"""
 import pandas as pd
 import unittest.mock as mock  # pylint: disable=consider-using-from-import
-from unittest.mock import patch
+
 from pathlib import Path # pylint: disable=import-error
 
-from life_expectancy.clean_files import *
+from life_expectancy.clean_files import Country, CleanFile
 from . import FIXTURES_DIR, OUTPUT_DIR
 
 

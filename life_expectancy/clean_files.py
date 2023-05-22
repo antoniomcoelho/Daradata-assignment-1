@@ -4,7 +4,7 @@ from pathlib import Path # pylint: disable=import-error
 import pandas as pd
 from abc import ABC, abstractmethod
 import numpy as np
-from enum import Enum, unique, Flag
+from enum import Enum, unique
 
 
 DATA_DIR = Path(__file__).parent / 'data'
@@ -17,15 +17,15 @@ class Country(Enum):
     Belgium = 'BE'
     Denmark = 'DK'
 
-    def list_countries():
+    def list_countries(cls):
         print('List of countries:')
-        for country in Country:
+        for country in cls:
             print("    ", country.name, ":", country.value)
-        countries = [country.value for country in Country]
+        countries = [country.value for country in cls]
         return countries
 
 
-class dataFormatsStrategy(ABC):
+class DataFormatsStrategy(ABC):
     """ Definition of strategy classes"""
     @abstractmethod
     def load_data(self):
@@ -36,7 +36,7 @@ class dataFormatsStrategy(ABC):
         """ Clean data files """
 
 
-class TSVstrategy(dataFormatsStrategy):
+class TSVstrategy(DataFormatsStrategy):
     def load_data(self):
         ''' Load data from TSV files '''
         name_file = DATA_DIR / "eu_life_expectancy_raw.tsv"
@@ -76,7 +76,7 @@ class TSVstrategy(dataFormatsStrategy):
         return filtered_df
 
 
-class JSONstrategy(dataFormatsStrategy):
+class JSONstrategy(DataFormatsStrategy):
     def load_data(self):
         ''' Load data from JSON files '''
         name_file = DATA_DIR / "eurostat_life_expect.json"
@@ -97,7 +97,7 @@ class JSONstrategy(dataFormatsStrategy):
         return filtered_df_list
 
 
-class cleanFile:
+class CleanFile:
     def __init__(self, region_user: list[str], file_type: str):
         self.region_user = region_user
         self.file_type = file_type
