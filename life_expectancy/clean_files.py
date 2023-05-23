@@ -16,7 +16,6 @@ class Country(Enum):
     PORTUGAL = 'PT'
     BELGIUM = 'BE'
     DENMARK = 'DK'
-    SPAIN = 'SP'
 
     @classmethod
     def list_countries(cls):

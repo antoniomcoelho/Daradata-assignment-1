@@ -4,7 +4,7 @@ import unittest.mock as mock  # pylint: disable=consider-using-from-import
 
 from pathlib import Path # pylint: disable=import-error
 
-from life_expectancy.clean_files import Country, CleanFile
+from life_expectancy.clean_files import CleanFile, Country, TSVstrategy, JSONstrategy
 from . import FIXTURES_DIR, OUTPUT_DIR
 
 
@@ -42,6 +42,6 @@ def test_save_data(pt_life_expectancy_expected):
     """Run the `save_data` function and compare the output to the expected output"""
     save_data_expected = pt_life_expectancy_expected
     with mock.patch.object(save_data_expected, "to_csv") as to_csv_mock:
-        cleanFile(['PT'], 'TSV').save_data([save_data_expected], ['PT'])
+        CleanFile(['PT'], 'TSV').save_data([save_data_expected], ['PT'])
         to_csv_mock.assert_called_with(OUTPUT_DIR / "pt_life_expectancy.csv", index=False)
 
