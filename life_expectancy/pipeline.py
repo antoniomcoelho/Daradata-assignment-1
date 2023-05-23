@@ -1,7 +1,7 @@
 ''' Pipeline for clean data code'''
 import sys
 
-from clean_files import Country, CleanFile
+from clean_files import Country, CleanFile # pylint: disable=import-error
 
 
 
@@ -11,9 +11,8 @@ def add_region_user() -> str:
         return_value = [sys.argv[2]]
         for i in range(3, len(sys.argv)):
             return_value.append(sys.argv[i])
-    except:
+    except: # pylint: disable=bare-except
         Country.list_countries(Country)
-
         return_value = ['PT']
 
     return return_value
@@ -22,13 +21,13 @@ def add_file_type_user() -> str:
     ''' Function to create a command-line option to select the file type'''
     try:
         return_value = sys.argv[1]
-    except:
+    except: # pylint: disable=bare-except
         return_value = 'TSV'
 
     return return_value
 
 
-def main(region_user: list[str] = ["PT"], file_type: str = "TSV") -> None:
+def main(region_user: list[str], file_type: str = "TSV") -> None:
     ''' Load, clean and save data'''
     clean_df = CleanFile(region_user, file_type)
 
