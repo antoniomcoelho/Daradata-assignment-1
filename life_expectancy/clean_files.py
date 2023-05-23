@@ -34,7 +34,7 @@ class DataFormatsStrategy(ABC):
         """ Loads data files """
 
     @abstractmethod
-    def clean_data(self, csv_table: pd.DataFrame, region_user: list[str]) -> pd.DataFrame:
+    def clean_data(self, csv_table: pd.DataFrame, region_user: list) -> pd.DataFrame:
         """ Clean data files """
 
 
