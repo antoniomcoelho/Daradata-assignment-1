@@ -104,7 +104,7 @@ class JSONstrategy(DataFormatsStrategy):
 
 class CleanFile:
     ''' Class to clean files '''
-    def __init__(self, region_user: list[str], file_type: str):
+    def __init__(self, region_user: list[Country], file_type: str):
         self.region_user = region_user
         self.file_type = file_type
         self.strategies: dict[str: DataFormatsStrategy] = {
@@ -124,7 +124,7 @@ class CleanFile:
 
         return filtered_df
 
-    def save_data(self, df_final: pd.DataFrame, region_user: list[str]) -> None:
+    def save_data(self, df_final: pd.DataFrame, region_user: list[Country]) -> None:
         ''' Save data as csv '''
         i = 0
         for value in df_final:
