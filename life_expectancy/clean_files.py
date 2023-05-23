@@ -104,10 +104,10 @@ class JSONstrategy(DataFormatsStrategy):
 
 class CleanFile:
     ''' Class to clean files '''
-    def __init__(self, region_user: list[Country], file_type: str):
+    def __init__(self, region_user: list[Country], file_type: str): # pylint: disable=unsubscriptable-object
         self.region_user = region_user
         self.file_type = file_type
-        self.strategies: dict[str: DataFormatsStrategy] = {
+        self.strategies: dict[str: DataFormatsStrategy] = { # pylint: disable=unsubscriptable-object
             "TSV": TSVstrategy(),
             "JSON": JSONstrategy(),
             None: TSVstrategy(),
@@ -124,7 +124,7 @@ class CleanFile:
 
         return filtered_df
 
-    def save_data(self, df_final: pd.DataFrame, region_user: list[Country]) -> None:
+    def save_data(self, df_final: pd.DataFrame, region_user: list[Country]) -> None: # pylint: disable=unsubscriptable-object
         ''' Save data as csv '''
         i = 0
         for value in df_final:
