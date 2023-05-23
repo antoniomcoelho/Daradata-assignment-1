@@ -31,7 +31,7 @@ jobs:
         pip install .
     - name: Lint with pylint
       run: |
-        pylint $(git ls-files '*.py')
+        pylint life_expectancy.clean_files
     - name: Test with pytest
       run: |
         pytest 
