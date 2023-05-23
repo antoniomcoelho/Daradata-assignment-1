@@ -46,7 +46,7 @@ class TSVstrategy(DataFormatsStrategy):
         csv_table = pd.read_table(name_file, sep='\t')
         return csv_table
 
-    def clean_data(self, csv_table: pd.DataFrame, region_user: list[str]) -> pd.DataFrame:
+    def clean_data(self, csv_table: pd.DataFrame, region_user: list) -> pd.DataFrame:
         ''' Function to clean data from eu_life_expectancy_raw.tsv file'''
         first_column = csv_table.columns[0]
         other_cols = csv_table.columns[1:]
@@ -87,7 +87,7 @@ class JSONstrategy(DataFormatsStrategy):
         csv_table = pd.read_json(name_file)
         return csv_table
 
-    def clean_data(self, csv_table: pd.DataFrame, region_user: list[str]) -> pd.DataFrame:
+    def clean_data(self, csv_table: pd.DataFrame, region_user: list) -> pd.DataFrame:
         ''' Function to clean data '''
         selected_columns = ['unit', 'sex', 'age', 'country', 'year', 'life_expectancy']
 
